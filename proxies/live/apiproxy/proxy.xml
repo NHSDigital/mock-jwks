@@ -1,0 +1,4 @@
+<APIProxy name="mj">
+  <!-- This is the root of the application -->
+  <Description>"mock-jwks"</Description>
+</APIProxy>
