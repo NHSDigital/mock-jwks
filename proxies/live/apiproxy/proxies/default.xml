@@ -1,70 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ProxyEndpoint name="default">
   <Flows>
-    <Flow name="OptionsPreFlight">
-      <Request/>
+    <Flow name="Ping">
       <Response>
         <Step>
-          <Name>AssignMessage.AddCors</Name>
+          <Name>AssignMessage.Ping</Name>
         </Step>
       </Response>
-      <Condition>(request.verb = "OPTIONS") and (request.header.origin != null) and (request.header.Access-Control-Request-Method != null)</Condition>
+      <Condition>(proxy.pathsuffix MatchesPath "/_ping" AND (request.verb = "GET" OR request.verb = "HEAD"))</Condition>
     </Flow>
-    <Flow name="AddPayloadToPing">
-      <Description/>
-      <Request/>
-      <Response>
-        <Step>
-          <Name>AssignMessage.AddPayloadToPing</Name>
-        </Step>
-      </Response>
-      <Condition>(proxy.pathsuffix MatchesPath "/_ping") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-    </Flow>
-    <Flow name="StatusEndpoint">
+    <Flow name="Status">
+      <Description>This is a mock status endpoint to test pytest_nhsd_apim, there's not really a backend.</Description>
       <Request>
         <Step>
           <Condition>request.header.apikey = null or private.common.status-endpoint-api-key != request.header.apikey</Condition>
           <Name>RaiseFault.401Unauthorized</Name>
         </Step>
+      </Request>
+      <Response>
         <Step>
-          <Name>ServiceCallout.CallHealthcheckEndpoint</Name>
+          <Name>AssignMessage.Status</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
+    </Flow>
+    <Flow name="GetStatusAPIKey">
+      <Description>Returns the API key used for all status endpoints. </Description>
+      <Request>
+        <Step>
+          <Condition>request.header.apikey = null</Condition>
+          <Name>RaiseFault.401Unauthorized</Name>          
+        </Step>
+        <Step>
+          <Name>VerifyAPIKey</Name>
+        </Step>
+        <Step>
+          <Condition>verifyapikey.VerifyAPIKey.failed = true</Condition>
+          <Name>RaiseFault.401Unauthorized</Name>          
         </Step>
       </Request>
       <Response>
         <Step>
-          <Name>javascript.SetStatusResponse</Name>
+          <Name>AssignMessage.StatusAPIKey</Name>
         </Step>
       </Response>
-      <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))
-      </Condition>
+      <Condition>(proxy.pathsuffix MatchesPath "/status-api-key") and (request.verb = "GET")</Condition>
+    </Flow>
+    <Flow name="MockJWKS">
+      <Response>
+        <Step>
+          <Name>AssignMessage.DecodePublicKeyPathSuffix</Name>
+        </Step>
+      </Response>
     </Flow>
   </Flows>
-  <PreFlow/>
-  <PostClientFlow name="PostClientFlow">
-    <Response>
-      <Step>
-        <Name>FlowCallout.LogToSplunk</Name>
-      </Step>
-    </Response>
-  </PostClientFlow>
   <HTTPProxyConnection>
-    <BasePath>{{ SERVICE_BASE_PATH }}</BasePath>
+    <BasePath>/{{ SERVICE_BASE_PATH }}</BasePath>
     <VirtualHost>secure</VirtualHost>
   </HTTPProxyConnection>
-  <RouteRule name="NoRoute">
-    <Condition>(request.verb = "OPTIONS") and (request.header.origin != null) and (request.header.Access-Control-Request-Method != null)</Condition>
-  </RouteRule>
-  <RouteRule name="NoRoutePing">
-    <Condition>(proxy.pathsuffix MatchesPath "/_ping") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-  </RouteRule>
-  <RouteRule name="NoRouteStatus">
-    <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-  </RouteRule>
-  <RouteRule name="mock-jwks-target">
-    <TargetEndpoint>mock-jwks-target</TargetEndpoint>
-  </RouteRule>
-  <DefaultFaultRule>
-    <Step>
-      <Name>AssignMessage.Errors.CatchAllMessage</Name>
-    </Step>
-  </DefaultFaultRule>
+  <RouteRule name="noroute"/>
 </ProxyEndpoint>
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AssignMessage.DecodePublicKeyPathSuffix" async="false">
+  <AssignVariable>
+    <Name>jwk_encoded</Name>
+    <Template>{substring(proxy.pathsuffix,1)}</Template>
+  </AssignVariable>
+  <AssignTo createNew="false" transport="http" type="response"/>
+  <Set>
+    <Payload contentType="application/json">{decodeBase64(jwk_encoded)}</Payload>
+    <StatusCode>200</StatusCode>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

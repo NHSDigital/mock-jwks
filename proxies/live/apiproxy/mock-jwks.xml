@@ -1,0 +1,3 @@
+<APIProxy name="mock-jwks">
+  <Description>Mock JWKS. Pass it a base64encoded version of your public key in the public_key query parameter and it will echo it back at you.</Description>
+</APIProxy>
