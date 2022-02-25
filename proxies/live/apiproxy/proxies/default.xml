@@ -29,14 +29,14 @@
       <Request>
         <Step>
           <Condition>request.header.apikey = null</Condition>
-          <Name>RaiseFault.401Unauthorized</Name>          
+          <Name>RaiseFault.401Unauthorized</Name>
         </Step>
         <Step>
           <Name>VerifyAPIKey</Name>
         </Step>
         <Step>
           <Condition>verifyapikey.VerifyAPIKey.failed = true</Condition>
-          <Name>RaiseFault.401Unauthorized</Name>          
+          <Name>RaiseFault.401Unauthorized</Name>
         </Step>
       </Request>
       <Response>
@@ -46,6 +46,81 @@
       </Response>
       <Condition>(proxy.pathsuffix MatchesPath "/status-api-key") and (request.verb = "GET")</Condition>
     </Flow>
+
+    <!-- Beginning of auth-testing flows, to verify the pytest-nhsd-apim functionality -->
+    <!-- Testing tokens granted via authenticating with the NHS Login backend -->
+    <Flow name="nhs-login-P0">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP0</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P0") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P0:mock-jwks scope.</Description>
+    </Flow>
+    <Flow name="nhs-login-P5">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP5</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P5") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P5:mock-jwks scope.</Description>
+    </Flow>
+    <Flow name="nhs-login-P9">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP9</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P9") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P9:mock-jwks scope.</Description>
+    </Flow>
+
+
+    <!-- Testing tokens granted via authenticating with the NHS CIS2 backend -->
+    <Flow name="nhs-cis2-aal1">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.CIS2aal1</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-cis2/aal1") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal1:mock-jwks scope.</Description>
+    </Flow>
+
+    <Flow name="nhs-cis2-aal3">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.CIS2aal3</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-cis2/aal3") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal3:mock-jwks scope.</Description>
+    </Flow>
+
+    <!-- App restricted access tokens -->
+    <Flow name="app-level0">
+      <Request>
+        <Step>
+          <Name>VerifyAPIKey</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level0") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an apikey associated with a proxy product.</Description>
+    </Flow>
+    <Flow name="app-level3">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.AppLevel3</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level3") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:app:level3:mock-jwks scope.</Description>
+    </Flow>
+
+
+    <!-- Default endpoint, for "hosting" JWKS public keys -->
     <Flow name="MockJWKS">
       <Response>
         <Step>
@@ -60,4 +135,3 @@
   </HTTPProxyConnection>
   <RouteRule name="noroute"/>
 </ProxyEndpoint>
-
