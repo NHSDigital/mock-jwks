@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AssignMessage.Ping" async="false">
+  <Set>
+    <Payload contentType="application/json">{"version":"v1.0.0","revision":"{apiproxy.revision}","releaseId":"1","commitId":"0123456789abcdef"}</Payload>
+    <StatusCode>200</StatusCode>
+  </Set>
+  <AssignTo createNew="false" transport="http" type="response"/>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>

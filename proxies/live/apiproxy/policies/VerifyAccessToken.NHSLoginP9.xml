@@ -1,0 +1,4 @@
+<OAuthV2 async="false" continueOnError="false" enabled="true" name="VerifyAccessToken.NHSLoginP9">
+  <Operation>VerifyAccessToken</Operation>
+  <Scope>urn:nhsd:apim:user-nhs-login:P9:mock-jwks</Scope>
+</OAuthV2>

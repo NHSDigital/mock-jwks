@@ -1,70 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ProxyEndpoint name="default">
   <Flows>
-    <Flow name="OptionsPreFlight">
-      <Request/>
+    <Flow name="Ping">
       <Response>
         <Step>
-          <Name>AssignMessage.AddCors</Name>
+          <Name>AssignMessage.Ping</Name>
         </Step>
       </Response>
-      <Condition>(request.verb = "OPTIONS") and (request.header.origin != null) and (request.header.Access-Control-Request-Method != null)</Condition>
+      <Condition>(proxy.pathsuffix MatchesPath "/_ping" AND (request.verb = "GET" OR request.verb = "HEAD"))</Condition>
     </Flow>
-    <Flow name="AddPayloadToPing">
-      <Description/>
-      <Request/>
-      <Response>
-        <Step>
-          <Name>AssignMessage.AddPayloadToPing</Name>
-        </Step>
-      </Response>
-      <Condition>(proxy.pathsuffix MatchesPath "/_ping") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-    </Flow>
-    <Flow name="StatusEndpoint">
+    <Flow name="Status">
+      <Description>This is a mock status endpoint to test pytest_nhsd_apim, there's not really a backend.</Description>
       <Request>
         <Step>
           <Condition>request.header.apikey = null or private.common.status-endpoint-api-key != request.header.apikey</Condition>
           <Name>RaiseFault.401Unauthorized</Name>
         </Step>
+      </Request>
+      <Response>
         <Step>
-          <Name>ServiceCallout.CallHealthcheckEndpoint</Name>
+          <Name>AssignMessage.Status</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
+    </Flow>
+    <Flow name="GetStatusAPIKey">
+      <Description>Returns the API key used for all status endpoints. </Description>
+      <Request>
+        <Step>
+          <Condition>request.header.apikey = null</Condition>
+          <Name>RaiseFault.401Unauthorized</Name>
+        </Step>
+        <Step>
+          <Name>VerifyAPIKey</Name>
+        </Step>
+        <Step>
+          <Condition>verifyapikey.VerifyAPIKey.failed = true</Condition>
+          <Name>RaiseFault.401Unauthorized</Name>
         </Step>
       </Request>
       <Response>
         <Step>
-          <Name>javascript.SetStatusResponse</Name>
+          <Name>AssignMessage.StatusAPIKey</Name>
         </Step>
       </Response>
-      <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))
-      </Condition>
+      <Condition>(proxy.pathsuffix MatchesPath "/status-api-key") and (request.verb = "GET")</Condition>
+    </Flow>
+
+    <!-- Beginning of auth-testing flows, to verify the pytest-nhsd-apim functionality -->
+    <!-- Testing tokens granted via authenticating with the NHS Login backend -->
+    <Flow name="nhs-login-P0">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP0</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P0") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P0:mock-jwks scope.</Description>
+    </Flow>
+    <Flow name="nhs-login-P5">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP5</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P5") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P5:mock-jwks scope.</Description>
+    </Flow>
+    <Flow name="nhs-login-P9">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.NHSLoginP9</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-login/P9") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-login:P9:mock-jwks scope.</Description>
+    </Flow>
+
+
+    <!-- Testing tokens granted via authenticating with the NHS CIS2 backend -->
+    <Flow name="nhs-cis2-aal1">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.CIS2aal1</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-cis2/aal1") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal1:mock-jwks scope.</Description>
+    </Flow>
+
+    <Flow name="nhs-cis2-aal3">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.CIS2aal3</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-cis2/aal3") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal3:mock-jwks scope.</Description>
+    </Flow>
+
+    <!-- App restricted access tokens -->
+    <Flow name="app-level0">
+      <Request>
+        <Step>
+          <Name>VerifyAPIKey</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level0") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an apikey associated with a proxy product.</Description>
+    </Flow>
+    <Flow name="app-level3">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.AppLevel3</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level3") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:app:level3:mock-jwks scope.</Description>
+    </Flow>
+
+
+    <!-- Default endpoint, for "hosting" JWKS public keys -->
+    <Flow name="MockJWKS">
+      <Response>
+        <Step>
+          <Name>AssignMessage.DecodePublicKeyPathSuffix</Name>
+        </Step>
+      </Response>
     </Flow>
   </Flows>
-  <PreFlow/>
-  <PostClientFlow name="PostClientFlow">
-    <Response>
-      <Step>
-        <Name>FlowCallout.LogToSplunk</Name>
-      </Step>
-    </Response>
-  </PostClientFlow>
   <HTTPProxyConnection>
-    <BasePath>{{ SERVICE_BASE_PATH }}</BasePath>
+    <BasePath>/{{ SERVICE_BASE_PATH }}</BasePath>
     <VirtualHost>secure</VirtualHost>
   </HTTPProxyConnection>
-  <RouteRule name="NoRoute">
-    <Condition>(request.verb = "OPTIONS") and (request.header.origin != null) and (request.header.Access-Control-Request-Method != null)</Condition>
-  </RouteRule>
-  <RouteRule name="NoRoutePing">
-    <Condition>(proxy.pathsuffix MatchesPath "/_ping") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-  </RouteRule>
-  <RouteRule name="NoRouteStatus">
-    <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
-  </RouteRule>
-  <RouteRule name="mock-jwks-target">
-    <TargetEndpoint>mock-jwks-target</TargetEndpoint>
-  </RouteRule>
-  <DefaultFaultRule>
-    <Step>
-      <Name>AssignMessage.Errors.CatchAllMessage</Name>
-    </Step>
-  </DefaultFaultRule>
+  <RouteRule name="noroute"/>
 </ProxyEndpoint>

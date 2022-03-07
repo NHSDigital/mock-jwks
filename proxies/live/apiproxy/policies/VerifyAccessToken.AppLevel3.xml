@@ -1,0 +1,4 @@
+<OAuthV2 async="false" continueOnError="false" enabled="true" name="VerifyAccessToken.AppLevel3">
+  <Operation>VerifyAccessToken</Operation>
+  <Scope>urn:nhsd:apim:app:level3:mock-jwks</Scope>
+</OAuthV2>
