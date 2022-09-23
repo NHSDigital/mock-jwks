@@ -4,6 +4,8 @@ DESCRIPTION: example description
 APIGEE_ENVIRONMENTS:
   - name: internal-dev
     display_name: Internal Development
+  - name: prod
+    display_name: Production
 ---
 meta:
   api:
