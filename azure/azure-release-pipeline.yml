@@ -32,3 +32,8 @@ extends:
     service_base_path: ${{ variables.service_base_path }} 
     apigee_deployments:
       - environment: internal-dev
+        jinja_templates:
+          TESTING_ENDPOINTS: true
+      - environment: prod
+        depends_on:
+          - internal_dev

@@ -24,6 +24,7 @@
       </Response>
       <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
     </Flow>
+    {% if TESTING_ENDPOINTS | default(false) %}
     <Flow name="GetStatusAPIKey">
       <Description>Returns the API key used for all status endpoints. </Description>
       <Request>
@@ -118,7 +119,7 @@
       <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level3") and (request.verb = "GET")</Condition>
       <Description>An endpoint that requires an access token with urn:nhsd:apim:app:level3:mock-jwks scope.</Description>
     </Flow>
-
+    {% endif %}
 
     <!-- Default endpoint, for "hosting" JWKS public keys -->
     <Flow name="MockJWKS">
