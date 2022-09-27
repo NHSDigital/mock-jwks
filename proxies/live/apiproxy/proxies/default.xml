@@ -29,10 +29,6 @@
       <Description>Returns the API key used for all status endpoints. </Description>
       <Request>
         <Step>
-          <Condition>request.header.apikey = null</Condition>
-          <Name>RaiseFault.401Unauthorized</Name>
-        </Step>
-        <Step>
           <Name>VerifyAPIKey</Name>
         </Step>
         <Step>
@@ -45,7 +41,28 @@
           <Name>AssignMessage.StatusAPIKey</Name>
         </Step>
       </Response>
-      <Condition>(proxy.pathsuffix MatchesPath "/status-api-key") and (request.verb = "GET")</Condition>
+      <Condition>(proxy.pathsuffix MatchesPath "/status-endpoint-api-key") and (request.verb = "GET")</Condition>
+    </Flow>
+    <Flow name="GetKeycloakClientCredentials">
+      <Description>Returns the client_id/client_secret</Description>
+      <Request>
+        <Step>
+          <Name>VerifyAPIKey</Name>
+        </Step>
+        <Step>
+          <Condition>verifyapikey.VerifyAPIKey.failed = true</Condition>
+          <Name>RaiseFault.401Unauthorized</Name>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>KeyValueMapOperations.GetMockCIS2ClientCredentials</Name>
+        </Step>
+        <Step>
+          <Name>AssignMessage.KeycloakClientCredentials</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/keycloak-client-credentials") and (request.verb = "GET")</Condition>
     </Flow>
 
     <!-- Beginning of auth-testing flows, to verify the pytest-nhsd-apim functionality -->
@@ -106,6 +123,10 @@
         <Step>
           <Name>VerifyAPIKey</Name>
         </Step>
+        <Step>
+          <Name>RaiseFault.401Unauthorized</Name>
+          <Condition>verifyapikey.VerifyAPIKey.failed = true</Condition>          
+        </Step>        
       </Request>
       <Condition>(proxy.pathsuffix MatchesPath "/test-auth/app/level0") and (request.verb = "GET")</Condition>
       <Description>An endpoint that requires an apikey associated with a proxy product.</Description>
