@@ -59,6 +59,9 @@
           <Name>KeyValueMapOperations.GetMockCIS2ClientCredentials</Name>
         </Step>
         <Step>
+          <Name>KeyValueMapOperations.GetMockNhsLoginClientCredentials</Name>
+        </Step>
+        <Step>
           <Name>AssignMessage.KeycloakClientCredentials</Name>
         </Step>
       </Response>
