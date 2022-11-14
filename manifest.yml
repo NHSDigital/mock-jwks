@@ -14,7 +14,7 @@ meta:
 apigee:
   environments:
 {% for env in APIGEE_ENVIRONMENTS %}
-  - name: {{ env.name }}}
+  - name: {{ env.name }}
     api_catalog: []
     specs: []
     products:
@@ -27,12 +27,12 @@ apigee:
       description: example description
       displayName: mock-jwks (Internal Development Environment)
       environments:
-      - {{ env.name }}}
-      name: mock-jwks-{{ env.name }}}
+      - {{ env.name }}
+      name: mock-jwks-{{ env.name }}
       proxies:
-      - mock-jwks-{{ env.name }}}
-      - identity-service-{{ env.name }}}
-      - identity-service-mock-{{ env.name }}}
+      - mock-jwks-{{ env.name }}
+      - identity-service-{{ env.name }}
+      - identity-service-mock-{{ env.name }}
       scopes:
       - urn:nhsd:apim:app:level0:mock-jwks
       - urn:nhsd:apim:app:level3:mock-jwks
