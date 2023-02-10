@@ -40,9 +40,9 @@ apigee:
       proxies:
       - mock-jwks-{{ env.name }}
       - identity-service-{{ env.name }}
-      {% if env.mock | default(False) %}
+{% if env.mock | default(False) %}
       - identity-service-mock-{{ env.name }}
-      {% endif %}
+{% endif %}
       scopes:
       - urn:nhsd:apim:app:level0:mock-jwks
       - urn:nhsd:apim:app:level3:mock-jwks
