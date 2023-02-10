@@ -1,9 +1,12 @@
 APIGEE_ENVIRONMENTS:
   - name: internal-dev
+  - name: internal-dev-sandbox
   - name: internal-qa
+  - name: internal-qa-sandbox
+  - name: ref
+  - name: dev
   - name: sandbox
   - name: int
-
 ---
 
 meta:
@@ -27,7 +30,7 @@ apigee:
       - name: ratelimit
         value: 300pm
       description: example description
-      displayName: mock-jwks (Internal Development Environment)
+      displayName: mock-jwks ({{ env.name }} Environment)
       environments:
       - {{ env.name }}
       name: mock-jwks-{{ env.name }}

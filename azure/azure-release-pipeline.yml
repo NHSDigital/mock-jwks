@@ -34,7 +34,19 @@ extends:
       - environment: internal-dev
         jinja_templates:
           TESTING_ENDPOINTS: true
+      - environment: internal-dev-sandbox
+        jinja_templates:
+          TESTING_ENDPOINTS: true
       - environment: internal-qa
+        jinja_templates:
+          TESTING_ENDPOINTS: true
+      - environment: internal-qa-sandbox
+        jinja_templates:
+          TESTING_ENDPOINTS: true
+      - environment: ref
+        jinja_templates:
+          TESTING_ENDPOINTS: true
+      - environment: dev
         jinja_templates:
           TESTING_ENDPOINTS: true
       - environment: int
