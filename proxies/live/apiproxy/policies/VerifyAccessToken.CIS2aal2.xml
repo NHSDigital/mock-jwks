@@ -1,0 +1,4 @@
+<OAuthV2 async="false" continueOnError="false" enabled="true" name="VerifyAccessToken.CIS2aal2">
+    <Operation>VerifyAccessToken</Operation>
+    <Scope>urn:nhsd:apim:user-nhs-cis2:aal2:mock-jwks</Scope>
+</OAuthV2>

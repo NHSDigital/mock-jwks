@@ -110,6 +110,16 @@
       <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal1:mock-jwks scope.</Description>
     </Flow>
 
+    <Flow name="nhs-cis2-aal2">
+      <Request>
+        <Step>
+          <Name>VerifyAccessToken.CIS2aal2</Name>
+        </Step>
+      </Request>
+      <Condition>(proxy.pathsuffix MatchesPath "/test-auth/nhs-cis2/aal2") and (request.verb = "GET")</Condition>
+      <Description>An endpoint that requires an access token with urn:nhsd:apim:user-nhs-cis2:aal2:mock-jwks scope.</Description>
+    </Flow>
+
     <Flow name="nhs-cis2-aal3">
       <Request>
         <Step>
