@@ -47,6 +47,7 @@ apigee:
       - urn:nhsd:apim:app:level0:mock-jwks
       - urn:nhsd:apim:app:level3:mock-jwks
       - urn:nhsd:apim:user-nhs-cis2:aal1:mock-jwks
+      - urn:nhsd:apim:user-nhs-cis2:aal2:mock-jwks
       - urn:nhsd:apim:user-nhs-cis2:aal3:mock-jwks
       - urn:nhsd:apim:user-nhs-login:P0:mock-jwks
       - urn:nhsd:apim:user-nhs-login:P5:mock-jwks
