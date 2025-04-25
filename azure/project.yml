@@ -2,3 +2,4 @@ variables:
   service_name: mock-jwks
   short_service_name: mj
   service_base_path: mock-jwks
+  python_version: 3.9
