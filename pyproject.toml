@@ -20,7 +20,7 @@ python = "^3.9"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7.9"
-black = "^24.3"
+black = "^24.3.0"
 pip-licenses = "^2.0.1"
 jinja2 = "^2.11.1"
 pyyaml = "^5.2"
