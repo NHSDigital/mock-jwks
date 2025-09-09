@@ -36,12 +36,12 @@ apigee:
       displayName: mock-jwks ({{ env.name }} Environment)
       environments:
       - {{ env.name }}
-      name: mock-jwks-{{ env.name }}
+      name: mock-jwks-{{ ('dep-' if env.name == 'dev' else '') + env.name  }}
       proxies:
-      - mock-jwks-{{ env.name }}
-      - identity-service-{{ env.name }}
+      - mock-jwks-{{ ('dep-' if env.name == 'dev' else '') + env.name  }}
+      - identity-service-{{ ('dep-' if env.name == 'dev' else '') + env.name  }}
 {% if env.mock | default(False) %}
-      - identity-service-mock-{{ env.name }}
+      - identity-service-mock-{{ ('dep-' if env.name == 'dev' else '') + env.name  }}
 {% endif %}
       scopes:
       - urn:nhsd:apim:app:level0:mock-jwks
