@@ -31,6 +31,15 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Validate Terraform Version
+        run: |
+          if [[ ! "$TF_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid Terraform version: $TF_VERSION"
+            exit 1
+          fi
+        env:
+          TF_VERSION: ${{ env.TF_VERSION }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
