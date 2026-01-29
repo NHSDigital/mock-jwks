@@ -1,6 +1,3 @@
-[project]
-python = "^3.9"
-
 [tool.poetry]
 name = "mock-jwks"
 version = "0.0.1-alpha"
