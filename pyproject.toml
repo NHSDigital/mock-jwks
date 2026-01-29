@@ -29,6 +29,6 @@ jsonpath-rw = "^1.4.0"
 semver = "^2.9.0"
 gitpython = "^3.1.41"
 coverage = "^5.5"
-aiohttp = "^3.9.4"
+aiohttp = "^3.13.3"
 
 [tool.poetry.scripts]
